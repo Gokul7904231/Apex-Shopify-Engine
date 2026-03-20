@@ -1,0 +1,33 @@
+{
+  "name": "shopify-analytics-engine",
+  "version": "1.0.0",
+  "description": "Shopify Product Analytics & Recommendation Engine with DSA modules",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd server && npx ts-node src/index.ts",
+    "client:dev": "cd client && npx vite --host",
+    "build": "cd client && npx vite build",
+    "lint": "eslint . --ext .ts,.tsx --ignore-pattern node_modules --ignore-pattern dist",
+    "format": "prettier --write \"**/*.{ts,tsx,json,css,md}\"",
+    "test:dsa": "cd server && npx ts-node src/dsa/__tests__/test-all.ts",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "firebase-admin": "^13.7.0"
+  }
+}

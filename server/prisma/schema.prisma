@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String         @id
+  email         String         @unique
+  createdAt     DateTime       @default(now())
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id               String @id @default(uuid())
+  userId           String
+  stripeCustomerId String
+  subscriptionId   String
+  status           String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Product {
+  id               String   @id @default(uuid())
+  title            String
+  price            Float
+  description      String?
+  vendor           String?
+  productType      String?
+  compareAtPrice   Float?
+  inventory        Int?
+  sku              String?
+  imageUrl         String?
+  image            String?
+  category         String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  orderItems       OrderItem[]
+  tags             ProductTag[]
+}
+
+model ProductTag {
+  id        String   @id @default(uuid())
+  productId String
+  tag       String
+  
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Customer {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  firstName   String?
+  lastName    String?
+  name        String?
+  ordersCount Int      @default(0)
+  totalSpent  Float    @default(0)
+  createdAt   DateTime @default(now())
+  
+  orders      Order[]
+}
+
+model Order {
+  id                 String   @id @default(uuid())
+  orderNumber        Int?
+  customerId         String
+  totalPrice         Float?
+  total              Float?
+  status             String   @default("pending")
+  financialStatus    String?
+  fulfillmentStatus  String?
+  createdAt          DateTime @default(now())
+  
+  customer           Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  lineItems          OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
+  title     String?
+  
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model AnalyticsEvent {
+  id        String   @id
+  eventType String
+  productId String?
+  userId    String?
+  data      String?
+  createdAt DateTime @default(now())
+}
+
+model RecommendationCache {
+  id          String   @id @default(uuid())
+  userId      String
+  productId   String
+  recommendations String // JSON string of recommended product IDs
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  
+  @@unique([userId, productId])
+}
