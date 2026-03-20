@@ -129,6 +129,16 @@ export class AnalyticsService {
     const stats = await this.getDashboardStats(testMode);
     return stats.topProducts;
   }
+
+  async getRevenueByCategory(_testMode = false) {
+    // Current Shopify implementation doesn't fetch categories, providing mock data for UI
+    return [
+      { name: 'Electronics', value: 4500 },
+      { name: 'Home & Garden', value: 3200 },
+      { name: 'Apparel', value: 2100 },
+      { name: 'Other', value: 800 }
+    ];
+  }
 }
 
 export const analyticsService = new AnalyticsService();
